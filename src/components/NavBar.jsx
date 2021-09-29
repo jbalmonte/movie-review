@@ -13,9 +13,9 @@ import MenuIcon from '@mui/icons-material/Menu'
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
+    backgroundColor: alpha(theme.palette.primary[50], 0.5),
     '&:hover': {
-        backgroundColor: alpha(theme.palette.common.white, 0.25),
+        backgroundColor: alpha(theme.palette.primary[100], 0.8),
     },
     marginLeft: 0,
     width: '100%',
@@ -26,8 +26,8 @@ const Search = styled('div')(({ theme }) => ({
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
+    padding: theme.spacing(0.5, 2),
+    height: '80%',
     position: 'absolute',
     pointerEvents: 'none',
     display: 'flex',
@@ -38,7 +38,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
     color: 'inherit',
     '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
+        padding: theme.spacing(0.5, 1, 0.5, 0),
         // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
@@ -46,7 +46,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         [theme.breakpoints.up('sm')]: {
             width: '40ch',
             '&:focus': {
-                width: '45ch',
+                width: '48ch',
             },
         },
     },
@@ -55,15 +55,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function SearchAppBar() {
     return (
         <Box sx={{ flexGrow: 1 }} elevation={0}>
-            <AppBar position="static" sx={{ bgcolor: 'background.default', color: 'background.contrastText' }}>
-                <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mr: 1 }}>
-                        <MovieFilterIcon sx={{ mr: 2, alignItems: 'center', }} />
+            <AppBar position="static" sx={{ bgcolor: 'primary.main', color: 'common.black' }}>
+                <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }} variant="dense">
+                    <Box sx={{ display: 'flex', alignItems: 'center', }}>
+                        <MovieFilterIcon sx={{ mr: 1, alignItems: 'center', }} />
                         <Typography
-                            variant="h6"
+                            variant="h4"
                             noWrap
-                            component="div"
-                            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+                            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }, fontFamily: 'Italianno, cursive', pr: 1, mt: 1 }}
                         >
                             Movie Review
                         </Typography>
