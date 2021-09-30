@@ -6,14 +6,16 @@ import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 
-export default function ActionAreaCard({ image, title = "Terminator (2011)", rating }) {
+export default function MovieCard({ movie: { image, title, imDbRating, imDbRatingCount } }, loading) {
+
     return (
-        <Card sx={{ width: 200 }}>
+        <Card >
             <CardActionArea>
                 <CardMedia
                     component="img"
                     height="200"
-                    image={`https://source.unsplash.com/random/${~~(Math.random() * 100)}`}
+                    image={image || "/images/img_placeholder.png"}
+                    // {`https://source.unsplash.com/random/${~~(Math.random() * 100)}`}
                     alt="green iguana"
                 />
                 <CardContent sx={{ bgcolor: 'common.black' }}>
@@ -22,10 +24,10 @@ export default function ActionAreaCard({ image, title = "Terminator (2011)", rat
                     </Typography>
                     <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', color: theme => theme.palette.secondary[400] }}>
                         <StarIcon sx={{ mr: 0.5 }} fontSize="small" color="warning" />
-                        9.7 (152)
+                        {imDbRating} ({Math.round(imDbRatingCount / 1000)}k)
                     </Typography>
                 </CardContent>
             </CardActionArea>
-        </Card>
+        </ Card>
     );
 }

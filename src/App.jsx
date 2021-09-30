@@ -2,7 +2,7 @@ import grey from '@mui/material/colors/grey';
 import orange from '@mui/material/colors/orange';
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Home } from './pages';
+import { Home, Category } from './pages';
 import Layout from './components/Layout'
 
 const theme = createTheme({
@@ -22,7 +22,8 @@ function App() {
       <Router>
         <Layout>
           <Switch>
-            <Route path="/" component={Home} />
+            <Route exact path="/" component={Home} />
+            <Route path="/:category" component={Category} />
           </Switch>
         </Layout>
       </Router>
