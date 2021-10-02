@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
+import Loader from '../components/Loader'
 import Button from '@mui/material/Button'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import React, { useEffect, useState } from 'react'
@@ -9,11 +10,11 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import MovieList from '../components/MovieList'
 import { useParams, useHistory } from 'react-router'
 import useURLCategory from '../hooks/useURLCategory'
+
 //import movies from '../constant/movies'
-import api from '../api'
+//import api from '../api'
 
-
-export default function Category() {
+function Category() {
     const params = useParams()
     const history = useHistory()
     const { category, apiCategory } = useURLCategory(params.category)
@@ -24,18 +25,26 @@ export default function Category() {
 
 
     useEffect(() => {
-        api.fetch(apiCategory).then(response => {
-            setMovies(response)
-            setCurrent(response.slice(count.prev, count.next))
-        })
-        //setCurrent(movies.slice(count.prev, count.next))
+        // api.fetch(apiCategory).then(response => {
+        //     setMovies(response)
+        //     setCurrent(response.slice(count.prev, count.next))
+        // })
+
+        import(`../db/${params.category}`)
+            .then(response => response.default)
+            .then(movies => {
+                setMovies(movies)
+                setCurrent(movies.slice(count.prev, count.next))
+            })
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    useEffect(() => setCurrent(prev => prev.concat(movies.slice(count.prev, count.next))), [count])
+    useEffect(() => (movies.length && count.next >= movies.length) && setHasMore(false), [count])
 
     const fetchMoreMovies = () => {
-        if (current.length && current.length >= movies.length) return setHasMore(false)
         setCount(prevState => ({ prev: prevState.next, next: prevState.next + 18 }))
+        setCurrent(current.concat(movies.slice(count.next, count.next + 18)))
     }
 
     return (
@@ -52,14 +61,12 @@ export default function Category() {
                 dataLength={current.length}
                 next={fetchMoreMovies}
                 hasMore={hasMore}
-                loader={
-                    <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
-                        <CircularProgress color="secondary" disableShrink />
-                    </Box>
-                }
+                loader={<Loader />}
             >
                 <MovieList movies={current} />
             </InfiniteScroll>
         </Container>
     )
 }
+
+export default Category

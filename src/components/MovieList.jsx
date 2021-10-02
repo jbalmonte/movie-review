@@ -10,7 +10,8 @@ export default function MovieList({ movies = [], loading }) {
                     <Grid item key={i} xs={6} md={4} lg={2}>
                         <MovieCard movie={movie} loading={loading} />
                     </Grid>
-                ))
+                )
+                )
             }
         </Grid>
 

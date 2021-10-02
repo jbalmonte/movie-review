@@ -17,6 +17,15 @@ const api = {
         } catch (err) {
             console.log('API:Error: ', err)
         }
+    },
+    fetchImage: async id => {
+        try {
+            const result = await axios.get(`${process.env.REACT_APP_IMDB_POSTERS_END_POINT}/${process.env.REACT_APP_IMDB_API_KEY}/${id}`)
+            //console.log('RESULT:', result.data, 'id', id)
+            return result.data?.posters?.[0]?.link
+        } catch (err) {
+            console.log('API:Error: ', err)
+        }
     }
 
 }
