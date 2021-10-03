@@ -6,12 +6,11 @@ import Box from '@mui/material/Box'
 import Skeleton from '@mui/material/Skeleton'
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router';
-import api from '../api';
 import MovieList from '../components/MovieList';
 import categoriesDB from '../db/categories'
 import categoriesList from '../constant/categories'
 
-const initialState = () => [{ label: 'Top', movies: Array(12).fill({}) }]
+const initialState = [{ label: 'Top', movies: Array(12).fill({}) }]
 
 function Home() {
     const [state, setState] = useState(initialState)
@@ -20,29 +19,35 @@ function Home() {
 
     useEffect(() => {
         setLoading(true)
-        // async function init() {
-        //     const data = await Promise.all(categories.map(async ({ label, apiPath, path }) => {
-        //         const movies = await api.fetchByCount(apiPath, 12)
-        //         return { label, path, movies }
-        //     }))
-        //     setState(data)
-        //     setCurrent(data.slice(count.prev, count.next))
-        // }
-        // init()
+        /*
+        OPTION 1
+        Fetch from an api, but if the api is capped, please switch to option number 2
+        
+        async function init() {
+            const data = await Promise.all(categoriesList.map(async ({ label, apiPath, path }) => {
+                const movies = await api.fetchByCount(apiPath, 12)
+                return { label, path, movies }
+            }))
+            setState(data)
+        }
+        init()
+        */
+
+        //OPTION 2 (Fetch from db)
         const data = categoriesList.map(category => ({ ...category, movies: categoriesDB[category.path].slice(0, 12) }))
         setState(data)
 
         return () => setLoading(false)
     }, [])
 
-    useEffect(() => setLoading(false), [state])
+    useEffect(() => setTimeout(() => setLoading(false), 1000), [state])
 
     return (
         <Container sx={{ pt: 5, pb: 3 }} maxWidth="false">
 
             {state.map(({ label = "", path = "", movies = [] }, i) => (
 
-                <Box key={label} >
+                <Box key={path} >
                     <Typography variant="h4" sx={{ mb: 3 }}>
                         {label}
                     </Typography>

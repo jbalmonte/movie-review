@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from '@mui/material/Card';
 import Skeleton from '@mui/material/Skeleton';
 import CardContent from '@mui/material/CardContent';
@@ -7,27 +7,36 @@ import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
 import StarIcon from '@mui/icons-material/Star';
 import useRatingCount from '../hooks/useRatingCount';
+import { useHistory } from 'react-router';
+import useImage from '../hooks/useImage';
+
+import api from '../api'
 
 function MovieCard({ movie = {}, loading }) {
-    const { image, title, imDbRating, imDbRatingCount, releaseState, year, gross, worldwideLifetimeGross } = movie
-
+    const { id, title, imDbRating, imDbRatingCount, releaseState, year, gross, worldwideLifetimeGross } = movie
     const ratingCount = useRatingCount(imDbRatingCount)
+    const transform = useImage()
+    const [image, setImage] = useState(movie.image)
+    const history = useHistory()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => (image === undefined) && api.fetchImage(id).then(img => setImage(img)), [])
 
     return (
         <Card sx={{ bgcolor: 'secondary.main' }}>
-            <CardActionArea>
+            <CardActionArea onClick={() => history.push(`/${id}`)}>
                 {
                     loading ?
                         <Skeleton variant="rectangular" animation="wave" height={200} /> :
                         <CardMedia
                             component="img"
                             height="200"
-                            image={image || "/images/img_placeholder.png"}
+                            image={transform(image) || "/images/img_placeholder.png"}
                             alt={title}
                         />
 
                 }
-                <CardContent sx={{ bgcolor: "text.primary" }}>
+                <CardContent sx={{ bgcolor: "text.primary", m: 0 }}>
                     {
                         loading ?
                             <>
@@ -67,4 +76,4 @@ function MovieCard({ movie = {}, loading }) {
     );
 }
 
-export default React.memo(MovieCard)
+export default MovieCard

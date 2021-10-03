@@ -2,7 +2,7 @@ import grey from '@mui/material/colors/grey';
 import orange from '@mui/material/colors/orange';
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Home, Category } from './pages';
+import { Home, Category, SingleMovie } from './pages';
 import Layout from './components/Layout'
 
 const theme = createTheme({
@@ -23,7 +23,8 @@ function App() {
         <Layout>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route path="/:category" component={Category} />
+            <Route exact path="/id(tt\d+)" component={SingleMovie} />
+            <Route exact path="/:category(\w+\D)" component={Category} />
           </Switch>
         </Layout>
       </Router>

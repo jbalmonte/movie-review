@@ -18,11 +18,19 @@ const api = {
             console.log('API:Error: ', err)
         }
     },
-    fetchImage: async id => {
+
+    fetchById: async id => {
         try {
-            const result = await axios.get(`${process.env.REACT_APP_IMDB_POSTERS_END_POINT}/${process.env.REACT_APP_IMDB_API_KEY}/${id}`)
-            //console.log('RESULT:', result.data, 'id', id)
-            return result.data?.posters?.[0]?.link
+            const response = await axios.get(`${process.env.REACT_APP_OMDB_END_POINT}/?apikey=${process.env.REACT_APP_OMDB_API_KEY}&i=${id}`)
+            return await response.data
+        } catch (err) {
+            console.log('API:Error: ', err)
+        }
+    },
+
+    fetchImage: async function (id) {
+        try {
+            return await (await this.fetchById(id)).Poster
         } catch (err) {
             console.log('API:Error: ', err)
         }

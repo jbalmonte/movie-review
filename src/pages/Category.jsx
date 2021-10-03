@@ -12,7 +12,7 @@ import { useParams, useHistory } from 'react-router'
 import useURLCategory from '../hooks/useURLCategory'
 
 //import movies from '../constant/movies'
-//import api from '../api'
+import api from '../api'
 
 function Category() {
     const params = useParams()
@@ -25,17 +25,23 @@ function Category() {
 
 
     useEffect(() => {
-        // api.fetch(apiCategory).then(response => {
-        //     setMovies(response)
-        //     setCurrent(response.slice(count.prev, count.next))
-        // })
 
-        import(`../db/${params.category}`)
-            .then(response => response.default)
-            .then(movies => {
-                setMovies(movies)
-                setCurrent(movies.slice(count.prev, count.next))
-            })
+        //fetch from the api, but if the api is capped at 100 requests, use movie list from the db
+
+        api.fetch(apiCategory).then(movies => {
+            setMovies(movies)
+            setCurrent(movies.slice(count.prev, count.next))
+        })
+
+
+
+        //from the db
+        // import(`../db/${params.category}`)
+        //     .then(response => response.default)
+        //     .then(movies => {
+        //         setMovies(movies)
+        //         setCurrent(movies.slice(count.prev, count.next))
+        //     })
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
