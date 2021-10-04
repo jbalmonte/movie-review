@@ -7,7 +7,7 @@ import Skeleton from '@mui/material/Skeleton'
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router';
 import MovieList from '../components/MovieList';
-import categoriesDB from '../db/categories'
+import categoriesDB from '../db'
 import categoriesList from '../constant/categories'
 
 const initialState = [{ label: 'Top', movies: Array(12).fill({}) }]
@@ -19,9 +19,10 @@ function Home() {
 
     useEffect(() => {
         setLoading(true)
+
         /*
         OPTION 1
-        Fetch from an api, but if the api is capped, please switch to option number 2
+        Fetch from an api, but if the api is capped, you can switch to option number 2
         
         async function init() {
             const data = await Promise.all(categoriesList.map(async ({ label, apiPath, path }) => {

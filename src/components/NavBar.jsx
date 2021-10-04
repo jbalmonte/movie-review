@@ -56,13 +56,13 @@ export default function SearchAppBar() {
     return (
         <Box sx={{ flexGrow: 1 }} elevation={0}>
             <AppBar position="static" sx={{ bgcolor: 'primary.main', color: 'common.black' }}>
-                <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }} variant="dense">
+                <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }} variant="dense" id="back-to-top-anchor">
                     <Box sx={{ display: 'flex', alignItems: 'center', }}>
                         <MovieFilterIcon sx={{ mr: 1, alignItems: 'center', }} />
                         <Typography
-                            variant="h4"
+                            variant="h6"
                             noWrap
-                            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }, fontFamily: 'Italianno, cursive', pr: 1, mt: 1 }}
+                            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }, fontFamily: 'Anton, sans serif', pr: 1 }}
                         >
                             Movie Review
                         </Typography>

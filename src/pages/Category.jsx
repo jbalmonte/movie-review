@@ -2,7 +2,7 @@
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import Loader from '../components/Loader'
+import CircularProgress from '@mui/material/CircularProgress'
 import Button from '@mui/material/Button'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import React, { useEffect, useState } from 'react'
@@ -26,24 +26,23 @@ function Category() {
 
     useEffect(() => {
 
-        //fetch from the api, but if the api is capped at 100 requests, use movie list from the db
+        /*
+        fetch from an api, but if the api is capped at 100 requests, use movie list from the db
 
         api.fetch(apiCategory).then(movies => {
             setMovies(movies)
             setCurrent(movies.slice(count.prev, count.next))
         })
+        */
 
+        //From the db
+        import(`../db/${params.category}`)
+            .then(response => response.default)
+            .then(movies => {
+                setMovies(movies)
+                setCurrent(movies.slice(count.prev, count.next))
+            })
 
-
-        //from the db
-        // import(`../db/${params.category}`)
-        //     .then(response => response.default)
-        //     .then(movies => {
-        //         setMovies(movies)
-        //         setCurrent(movies.slice(count.prev, count.next))
-        //     })
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => (movies.length && count.next >= movies.length) && setHasMore(false), [count])
@@ -54,12 +53,18 @@ function Category() {
     }
 
     return (
-        <Container sx={{ pt: 5, pb: 4 }} maxWidth="false">
-            <Box sx={{ display: 'flex', mb: 3 }}>
-                <Button startIcon={<ArrowBackIosIcon />} color="secondary" onClick={() => history.goBack()}>
+        <Container sx={{ pt: [3, 5], pb: 4 }} maxWidth="false">
+            <Box sx={{ display: [null, 'flex'], mb: 3 }}>
+
+                <Button
+                    startIcon={<ArrowBackIosIcon />}
+                    color="secondary"
+                    onClick={() => history.goBack()}
+                >
                     Back
                 </Button>
-                <Typography variant="h4" sx={{ mx: 'auto' }}>
+
+                <Typography variant="h4" align="center" sx={{ mx: 'auto' }}>
                     {category.toUpperCase()} MOVIES
                 </Typography>
             </Box>
@@ -67,7 +72,11 @@ function Category() {
                 dataLength={current.length}
                 next={fetchMoreMovies}
                 hasMore={hasMore}
-                loader={<Loader />}
+                loader={
+                    <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+                        <CircularProgress color="secondary" disableShrink />
+                    </Box>
+                }
             >
                 <MovieList movies={current} />
             </InfiniteScroll>
