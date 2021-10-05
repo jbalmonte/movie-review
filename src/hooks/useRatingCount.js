@@ -1,13 +1,17 @@
 
-const dict = {
-    m: 1e6,
-    k: 1e3
-}
 
-export default function useRatingCount(ratingCount) {
+function getRatingCount(n) {
+    const dict = {
+        m: 1e6,
+        k: 1e3
+    }
     for (let key in dict) {
         const value = dict[key]
-        if (ratingCount >= value) return `${(ratingCount / value).toFixed(1)}${key}`
+        if (n >= value) return `${(n / value).toFixed(1)}${key}`
     }
-    return ratingCount
+    return n
+}
+
+export default function useRatingCount(ratingCount, type) {
+    return type === 'func' ? getRatingCount : getRatingCount(ratingCount)
 }

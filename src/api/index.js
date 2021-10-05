@@ -21,7 +21,7 @@ const api = {
 
     fetchById: async id => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_OMDB_END_POINT}/?apikey=${process.env.REACT_APP_OMDB_API_KEY}&i=${id}`)
+            const response = await axios.get(`${process.env.REACT_APP_OMDB_END_POINT}/?apikey=${process.env.REACT_APP_OMDB_API_KEY}&i=${id}&plot=full`)
             return await response.data
         } catch (err) {
             console.log('API:Error: ', err)
