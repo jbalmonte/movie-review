@@ -11,7 +11,6 @@ import MovieList from '../components/MovieList'
 import { useParams, useHistory } from 'react-router'
 import useURLCategory from '../hooks/useURLCategory'
 
-//import movies from '../constant/movies'
 import api from '../api'
 
 function Category() {

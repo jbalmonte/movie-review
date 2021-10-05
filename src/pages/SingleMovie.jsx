@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import Container from '@mui/material/Container'
-import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import TableContainer from '@mui/material/TableContainer'
 import Table from '@mui/material/Table'
@@ -9,6 +8,7 @@ import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
 import TableBody from '@mui/material/TableBody'
 import Box from '@mui/material/Box'
+import Skeleton from '@mui/material/Skeleton'
 import useFetchData from '../hooks/useFetchData'
 import CategoryIcon from '@mui/icons-material/Category';
 import MovieIcon from '@mui/icons-material/Movie';
@@ -17,8 +17,10 @@ import EventIcon from '@mui/icons-material/Event';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import SportsScoreIcon from '@mui/icons-material/SportsScore';
 import PersonIcon from '@mui/icons-material/Person';
-
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import useMediaQuery from '@mui/material/useMediaQuery'
+import Poster from '../components/SingleMovie/Poster'
+import Title from '../components/SingleMovie/Title'
 
 const fields = [
     { Icon: props => <CategoryIcon {...props} />, field: 'Genre' },
@@ -37,13 +39,14 @@ export default function SingleMovie() {
 
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
+    const sm = useMediaQuery(theme => theme.breakpoints.down('sm'))
 
     useEffect(() => {
         setLoading(true)
         fetchData(id).then(data => {
             setData(data)
-            console.log(data)
-            setLoading(false)
+            // console.log(data)
+            setTimeout(() => setLoading(false), 1000)
         })
         return () => setLoading(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,54 +54,59 @@ export default function SingleMovie() {
 
 
     return (
-        <Container sx={{ bgcolor: 'inherit', pt: 5, display: 'flex', alignItems: 'center' }}>
+        <Container maxWidth="lg" sx={{ bgcolor: 'inherit', py: [4, 5], display: [null, 'flex'], alignItems: 'center' }}>
 
+            {sm ? <Title title={data.Title} loading={loading} /> : <Poster poster={data.Poster} loading={loading} />}
 
-            <Paper
-                elevation={0}
-                sx={{
-                    my: 1,
-                    mx: 0,
-                    backgroundImage: `url(${data.Poster})`,
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'contain',
-                    bgcolor: 'inherit',
-                    height: 500,
-                    width: 500,
-                }}
-            />
+            <Box sx={{ width: ['80%', '70%', '80%'], mx: 'auto', mb: 3 }}>
 
-            <Box sx={{ width: '90%', mx: 'auto' }}>
-                <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', mb: 3 }}>
-                    {data.Title?.toUpperCase()}
-                </Typography>
+                {sm ? <Poster poster={data.Poster} loading={loading} /> : <Title title={data.Title} loading={loading} />}
+
                 <TableContainer>
-                    <Table size="small" padding="none">
-                        <TableBody >
-                            {
-                                fields.map(v => (
-                                    <TableRow key={v.field}>
-                                        <TableCell sx={{ color: 'secondary.light', border: 'none', display: 'flex', alignItems: 'center', pt: 1 }}>
-                                            <v.Icon fontSize="small" sx={{ mr: 1 }} />
-                                            {v.field}:
-                                        </TableCell>
-                                        <TableCell sx={{ color: 'secondary.main', border: 'none' }}>
-                                            {data[v.field]}
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            }
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                    {
+                        loading ?
+                            <Box sx={{ display: 'flex', justifyContent: ['space-between', 'start'] }}>
+                                <Skeleton variant="rectangular" height={200} sx={{ bgcolor: "secondary.dark", mr: [0, 4], width: ['45%', '40%'] }} animation="wave" />
+                                <Skeleton variant="rectangular" height={200} sx={{ bgcolor: "secondary.dark", mr: [0, 4], width: ['45%', '40%'] }} animation="wave" />
+                            </Box>
+                            :
+                            <Table size="small" padding="none" >
+                                <TableBody >
+                                    {
+                                        fields.map(v => (
+                                            <TableRow key={v.field} sx={{ '& td': { border: 'none', pt: 1 } }}>
+                                                <TableCell sx={{ color: 'secondary.light', display: 'flex', alignItems: 'center' }}>
+                                                    <v.Icon fontSize="small" sx={{ mr: 1 }} />
+                                                    {v.field}
+                                                </TableCell>
+                                                <TableCell sx={{ color: 'secondary.main' }}>
+                                                    {data[v.field]}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    }
+                                </TableBody>
 
-                <Typography variant="h5" sx={{ mt: 4, mb: 1 }}>
-                    <MenuBookIcon fontSize="small" sx={{ mr: 1 }} />
-                    Plot
-                </Typography>
-                <Typography variant="body2" color="secondary" sx={{ textIndent: 50 }}>
-                    {data.Plot}
-                </Typography>
+                            </Table>
+                    }
+                </TableContainer>
+                {
+                    loading ?
+                        <Box sx={{ mt: 5 }}>
+                            <Skeleton variant="text" height={50} sx={{ bgcolor: "secondary.dark", mb: 0, width: ['50%', '30%', '20%'] }} animation="wave" />
+                            <Skeleton variant="text" width="100%" height={50} sx={{ bgcolor: "secondary.dark" }} animation="wave" />
+                        </Box>
+                        :
+                        <>
+                            <Typography variant="h5" sx={{ mt: 4, mb: 1 }}>
+                                <MenuBookIcon fontSize="small" sx={{ mr: 1 }} />
+                                Plot
+                            </Typography>
+                            <Typography variant="body2" color="secondary" sx={{ textIndent: [25, 50] }}>
+                                {data.Plot}
+                            </Typography>
+                        </>
+                }
             </Box>
 
         </Container >

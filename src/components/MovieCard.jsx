@@ -40,8 +40,8 @@ function MovieCard({ movie = {}, loading }) {
                     {
                         loading ?
                             <>
-                                <Skeleton height={10} animation="wave" sx={{ mb: 1, bgcolor: 'secondary.main' }} />
-                                <Skeleton height={10} animation="wave" width="60%" sx={{ bgcolor: 'secondary.main' }} />
+                                <Skeleton height={13} variant="text" animation="wave" sx={{ mb: 1, bgcolor: 'secondary.main' }} />
+                                <Skeleton height={13} variant="text" animation="wave" width="60%" sx={{ bgcolor: 'secondary.main' }} />
                             </>
                             :
                             <>
