@@ -52,7 +52,7 @@ export default function SingleMovie() {
                         backgroundSize: 'contain',
                         bgcolor: 'inherit',
                         height: 300,
-                        width: 300,
+                        width: 250,
                     }}
                 >
 
@@ -62,12 +62,12 @@ export default function SingleMovie() {
                         The Shawshank Redemption
                     </Typography>
                     <TableContainer>
-                        <Table size="small" sx={{ width: "70%" }}>
+                        <Table size="small" sx={{ width: "50%" }}>
                             <TableBody >
                                 {
                                     items.map(item => (
                                         <TableRow key={item.field}>
-                                            <TableCell sx={{ color: 'primary.light', border: 'none', display: 'flex', alignItems: 'center' }}>
+                                            <TableCell sx={{ color: 'secondary.light', border: 'none', display: 'flex', alignItems: 'center' }}>
                                                 <item.Icon fontSize="small" sx={{ mr: 1 }} />
                                                 {item.field}:
                                             </TableCell>
@@ -86,7 +86,7 @@ export default function SingleMovie() {
                 <Typography variant="h4" gutterBottom>
                     Plot
                 </Typography>
-                <Typography variant="subtitle2" color="secondary">
+                <Typography variant="body2" color="secondary">
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Assumenda fugit voluptate eligendi rerum repellat quo necessitatibus enim non? Quibusdam ea maxime, a accusamus cum, vitae, voluptas corporis tenetur rerum repudiandae neque iusto minima eveniet doloribus fugit animi ducimus tempora sint! Quisquam ullam beatae eos dolorum aspernatur corporis asperiores ab eius est magnam amet molestias cupiditate, doloremque quis iste sed tempore illum suscipit nihil possimus quibusdam numquam praesentium omnis qui. Quibusdam porro, corporis molestiae aliquid beatae praesentium repudiandae provident laudantium tempora voluptatibus, ipsam ut quasi a, veniam rem fugit dolore earum cumque quo nam! Dolores veritatis at itaque qui neque consequuntur!
                 </Typography>
             </Box>
