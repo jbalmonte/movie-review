@@ -23,7 +23,7 @@ function App() {
         <Layout>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route exact path="/id(tt\d+)" component={SingleMovie} />
+            <Route exact path="/:id(tt\d+)" component={SingleMovie} />
             <Route exact path="/:category(\w+\D)" component={Category} />
           </Switch>
         </Layout>
