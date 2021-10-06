@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router'
+import { useParams, useHistory } from 'react-router'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import TableContainer from '@mui/material/TableContainer'
@@ -21,6 +21,8 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Poster from '../components/SingleMovie/Poster'
 import Title from '../components/SingleMovie/Title'
+import BackButton from '../components/BackButton';
+import useSearch from '../hooks/useSearch'
 
 const fields = [
     { Icon: props => <CategoryIcon {...props} />, field: 'Genre' },
@@ -36,7 +38,8 @@ export default function SingleMovie() {
 
     const { id } = useParams()
     const fetchData = useFetchData()
-
+    const { searchText } = useSearch()
+    const history = useHistory()
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
     const sm = useMediaQuery(theme => theme.breakpoints.down('sm'))
@@ -45,29 +48,44 @@ export default function SingleMovie() {
         setLoading(true)
         fetchData(id).then(data => {
             setData(data)
-            // console.log(data)
             setTimeout(() => setLoading(false), 1000)
         })
         return () => setLoading(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    useEffect(() => {
+        if (searchText) {
+            history.push("/")
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchText])
 
     return (
-        <Container maxWidth="lg" sx={{ bgcolor: 'inherit', py: [4, 5], display: [null, 'flex'], alignItems: 'center' }}>
+        <Container maxWidth="lg" sx={{ bgcolor: 'inherit', pt: [4, 5], pb: [5, 3], display: [null, 'flex'], alignItems: 'center' }}>
 
-            {sm ? <Title title={data.Title} loading={loading} /> : <Poster poster={data.Poster} loading={loading} />}
+            <Box sx={{ width: ['80%', '70%', '80%'], px: 3, mx: 'auto', mb: 3 }}>
+                {
+                    sm ?
+                        <>
+                            <BackButton sx={{ textAlign: 'top', mb: 2 }} loading={loading} />
+                            <Title title={data.Title} loading={loading} />
+                            <Poster poster={data.Poster} loading={loading} />
+                        </>
+                        :
+                        <>
+                            <BackButton sx={{ textAlign: 'top', mb: 2 }} loading={loading} />
+                            <Title title={data.Title} loading={loading} />
+                        </>
+                }
 
-            <Box sx={{ width: ['80%', '70%', '80%'], mx: 'auto', mb: 3 }}>
-
-                {sm ? <Poster poster={data.Poster} loading={loading} /> : <Title title={data.Title} loading={loading} />}
 
                 <TableContainer>
                     {
                         loading ?
                             <Box sx={{ display: 'flex', justifyContent: ['space-between', 'start'] }}>
-                                <Skeleton variant="rectangular" height={200} sx={{ bgcolor: "secondary.dark", mr: [0, 4], width: ['45%', '40%'] }} animation="wave" />
-                                <Skeleton variant="rectangular" height={200} sx={{ bgcolor: "secondary.dark", mr: [0, 4], width: ['45%', '40%'] }} animation="wave" />
+                                <Skeleton variant="rectangular" height={150} sx={{ bgcolor: "secondary.dark", mr: [0, 4], width: ['45%', '40%'] }} animation="wave" />
+                                <Skeleton variant="rectangular" height={150} sx={{ bgcolor: "secondary.dark", mr: [0, 4], width: ['45%', '40%'] }} animation="wave" />
                             </Box>
                             :
                             <Table size="small" padding="none" >
@@ -94,11 +112,11 @@ export default function SingleMovie() {
                     loading ?
                         <Box sx={{ mt: 5 }}>
                             <Skeleton variant="text" height={50} sx={{ bgcolor: "secondary.dark", mb: 0, width: ['50%', '30%', '20%'] }} animation="wave" />
-                            <Skeleton variant="text" width="100%" height={50} sx={{ bgcolor: "secondary.dark" }} animation="wave" />
+                            <Skeleton variant="text" width="90%" height={50} sx={{ bgcolor: "secondary.dark" }} animation="wave" />
                         </Box>
                         :
                         <>
-                            <Typography variant="h5" sx={{ mt: 4, mb: 1 }}>
+                            <Typography variant="h5" sx={{ mt: 5 }} gutterBottom>
                                 <MenuBookIcon fontSize="small" sx={{ mr: 1 }} />
                                 Plot
                             </Typography>
@@ -109,6 +127,7 @@ export default function SingleMovie() {
                 }
             </Box>
 
+            {!sm && <Poster poster={data.Poster} loading={loading} />}
         </Container >
     )
 }

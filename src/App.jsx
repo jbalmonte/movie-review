@@ -4,6 +4,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Home, Category, SingleMovie } from './pages';
 import Layout from './components/Layout'
+import SearchProvider from './context/SearchProvider'
 
 const theme = createTheme({
   palette: {
@@ -20,13 +21,15 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <Layout>
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/:id(tt\d+)" component={SingleMovie} />
-            <Route exact path="/:category(\w+\D)" component={Category} />
-          </Switch>
-        </Layout>
+        <SearchProvider>
+          <Layout>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route exact path="/:id(tt\d+)" component={SingleMovie} />
+              <Route exact path="/:category(\w+\D)" component={Category} />
+            </Switch>
+          </Layout>
+        </SearchProvider>
       </Router>
     </ThemeProvider>
   );

@@ -27,7 +27,7 @@ function MovieCard({ movie = {}, loading }) {
             <CardActionArea onClick={() => history.push(`/${id}`)}>
                 {
                     loading ?
-                        <Skeleton variant="rectangular" animation="wave" height={200} /> :
+                        <Skeleton variant="rectangular" animation="wave" height={200} sx={{ bgcolor: theme => theme.palette.secondary[500] }} /> :
                         <CardMedia
                             component="img"
                             height="200"
@@ -40,8 +40,8 @@ function MovieCard({ movie = {}, loading }) {
                     {
                         loading ?
                             <>
-                                <Skeleton height={13} variant="text" animation="wave" sx={{ mb: 1, bgcolor: 'secondary.main' }} />
-                                <Skeleton height={13} variant="text" animation="wave" width="60%" sx={{ bgcolor: 'secondary.main' }} />
+                                <Skeleton height={13} variant="text" animation="wave" sx={{ mb: 1, bgcolor: theme => theme.palette.secondary[500] }} />
+                                <Skeleton height={13} variant="text" animation="wave" width="60%" sx={{ bgcolor: theme => theme.palette.secondary[500] }} />
                             </>
                             :
                             <>

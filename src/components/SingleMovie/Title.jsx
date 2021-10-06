@@ -13,9 +13,9 @@ export default function Title({ title, loading }) {
                             height={50}
                             sx={{
                                 bgcolor: "secondary.dark",
-                                mx: ['auto', null],
+                                mx: ['auto', 0],
                                 mr: 4,
-                                width: ['80%', '100%']
+                                width: ['80%', '90%']
                             }}
                             animation="wave"
                         />
@@ -26,14 +26,22 @@ export default function Title({ title, loading }) {
                                 bgcolor: "secondary.dark",
                                 mx: ['auto', 0],
                                 mr: 4,
-                                mb: 3,
+                                mb: 4,
                                 width: ['40%']
                             }}
                             animation="wave" />
                     </>
                     :
 
-                    <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', mb: 3, textAlign: ['center', 'left'] }}>
+                    <Typography
+                        variant="h4"
+                        component="h1"
+                        sx={{
+                            fontWeight: 'bold',
+                            mb: 3,
+                            textAlign: ['center', 'left']
+                        }}
+                    >
                         {title?.toUpperCase()}
                     </Typography>
             }

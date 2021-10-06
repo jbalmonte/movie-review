@@ -6,4 +6,5 @@
 
 html {
     background-color: #424242;
+    overflow-y: scroll;
 }

@@ -9,13 +9,17 @@ import { useHistory } from 'react-router';
 import MovieList from '../components/MovieList';
 import categoriesDB from '../db'
 import categoriesList from '../constant/categories'
+import useSearch from '../hooks/useSearch';
+import FindInPageIcon from '@mui/icons-material/FindInPage';
 
-const initialState = [{ label: 'Top', movies: Array(12).fill({}) }]
+
+const initialState = [{ label: 'Top', movies: Array(12).fill({}).map((_, i) => ({ id: i })) }]
 
 function Home() {
     const [state, setState] = useState(initialState)
     const [loading, setLoading] = useState(true)
     const history = useHistory()
+    const { searchText, setSearchText } = useSearch()
 
     useEffect(() => {
         setLoading(true)
@@ -35,10 +39,21 @@ function Home() {
         */
 
         //OPTION 2 (Fetch from db)
-        const data = categoriesList.map(category => ({ ...category, movies: categoriesDB[category.path].slice(0, 12) }))
+        const data = categoriesList.map(
+            category => (
+                {
+                    ...category,
+                    movies: categoriesDB[category.path].slice(0, 12)
+                    //  .filter(m => new RegExp(searchText, 'i').test(m.title))
+                }
+            ))
         setState(data)
 
-        return () => setLoading(false)
+        return () => {
+            setLoading(false)
+            setSearchText('')
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => setTimeout(() => setLoading(false), 1000), [state])
@@ -46,34 +61,45 @@ function Home() {
     return (
         <Container sx={{ pt: 5, pb: 3 }} maxWidth="false">
 
-            {state.map(({ label = "", path = "", movies = [] }, i) => (
-
-                <Box key={path} >
-                    <Typography variant="h4" sx={{ mb: 3 }}>
-                        {label}
-                    </Typography>
-
-                    <MovieList movies={movies} loading={loading} />
-
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            {state.map(({ label = "", path = "", movies = [] }) => {
+                const filteredMovies = movies.filter(m => new RegExp(searchText, 'i').test(m.title))
+                return (
+                    <React.Fragment key={path}>
                         {
-                            loading ?
-                                <Skeleton variant="text" /> :
+                            filteredMovies.length &&
+                            <Box >
+                                <Typography variant="h4" sx={{ mb: 3 }}>
+                                    {label}
+                                </Typography>
 
-                                <Button
-                                    variant="text"
-                                    sx={{ height: '60%', mt: 2, mb: 3, visibility: movies.length !== 12 ? 'hidden' : '' }}
-                                    color="secondary"
-                                    endIcon={<ArrowForwardIcon />}
-                                    onClick={() => history.push(`/${path}`)}
-                                >
-                                    Discover More
+                                <MovieList
+                                    movies={filteredMovies}
+                                    loading={loading}
+                                    label={label}
+                                />
 
-                                </Button>
+                                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                    {
+                                        loading ?
+                                            <Skeleton variant="text" />
+                                            :
+                                            <Button
+                                                variant="text"
+                                                sx={{ height: '60%', mt: 2, mb: 3, visibility: filteredMovies.length !== 12 ? 'hidden' : '' }}
+                                                color="secondary"
+                                                endIcon={<ArrowForwardIcon />}
+                                                onClick={() => history.push(`/${path}`)}
+                                            >
+                                                Discover More
+                                            </Button>
+                                    }
+                                </Box>
+                            </Box>
                         }
-                    </Box>
-                </Box>
-            ))
+                    </React.Fragment>
+                )
+            }
+            )
             }
         </Container >
     )

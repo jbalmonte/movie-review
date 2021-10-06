@@ -2,7 +2,6 @@ import React from 'react'
 import Paper from '@mui/material/Paper'
 import Skeleton from '@mui/material/Skeleton'
 
-
 export default function Poster({ poster, loading }) {
     return (
         <>
@@ -13,10 +12,10 @@ export default function Poster({ poster, loading }) {
                         sx={{
                             bgcolor: "secondary.dark",
                             mx: ['auto', null],
-                            mr: ['auto', 4],
+                            mr: ['auto', 1, 1, 4],
                             mb: [5, 0],
                             height: [200, 500],
-                            width: ['80%', '30%'],
+                            width: ['80%', '40%'],
                         }}
                         animation="wave"
                     />

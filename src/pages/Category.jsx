@@ -1,30 +1,33 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
-import Button from '@mui/material/Button'
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import React, { useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import MovieList from '../components/MovieList'
-import { useParams, useHistory } from 'react-router'
+import { useParams } from 'react-router'
 import useURLCategory from '../hooks/useURLCategory'
+import useSearch from '../hooks/useSearch';
+import BackButton from '../components/BackButton'
 
 import api from '../api'
 
 function Category() {
+
     const params = useParams()
-    const history = useHistory()
     const { category, apiCategory } = useURLCategory(params.category)
     const [movies, setMovies] = useState([])
+    const [filteredMovies, setFilteredMovies] = useState([])
     const [count, setCount] = useState({ prev: 0, next: 18 })
     const [current, setCurrent] = useState([])
     const [hasMore, setHasMore] = useState(true)
+    const { searchText, setSearchText } = useSearch()
+
 
 
     useEffect(() => {
-
         /*
         fetch from an api, but if the api is capped at 100 requests, use movie list from the db
 
@@ -39,31 +42,43 @@ function Category() {
             .then(response => response.default)
             .then(movies => {
                 setMovies(movies)
+                setFilteredMovies(movies)
                 setCurrent(movies.slice(count.prev, count.next))
             })
 
+        return () => setSearchText('')
     }, [])
 
-    useEffect(() => (movies.length && count.next >= movies.length) && setHasMore(false), [count])
+    useEffect(() => {
+        const filteredMovies = movies.filter(m => new RegExp(searchText, 'i').test(m.title))
+        setFilteredMovies(filteredMovies)
+        setCurrent(filteredMovies.slice(0, 18))
+        setCount({ prev: 18, next: 36 })
+    }, [searchText]);
+
+    useEffect(() => {
+        if (filteredMovies.length && current.length === filteredMovies.length) {
+            setHasMore(false)
+        }
+    }, [current, filteredMovies])
+
 
     const fetchMoreMovies = () => {
         setCount(prevState => ({ prev: prevState.next, next: prevState.next + 18 }))
-        setCurrent(current.concat(movies.slice(count.next, count.next + 18)))
+        setCurrent(current.concat(filteredMovies.slice(count.next, count.next + 18)))
     }
 
     return (
         <Container sx={{ pt: [3, 5], pb: 4 }} maxWidth="false">
             <Box sx={{ display: [null, 'flex'], mb: 3 }}>
 
-                <Button
-                    startIcon={<ArrowBackIosIcon />}
-                    color="secondary"
-                    onClick={() => history.goBack()}
-                >
-                    Back
-                </Button>
+                <BackButton />
 
-                <Typography variant="h4" align="center" sx={{ mx: 'auto' }}>
+                <Typography
+                    variant="h4"
+                    align="center"
+                    sx={{ mx: 'auto' }}
+                >
                     {category.toUpperCase()} MOVIES
                 </Typography>
             </Box>
