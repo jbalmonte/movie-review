@@ -9,7 +9,7 @@ function MovieList({ loading, label, movies = [] }) {
         <Grid container spacing={[1, 2]} >
             {
                 movies.map((movie, i) => (
-                    <Grid item key={label + movie.id} xs={6} md={4} lg={2}>
+                    <Grid item key={label + movie?.id} xs={6} md={4} lg={2}>
                         <MovieCard movie={movie} loading={loading} />
                     </Grid>
                 ))

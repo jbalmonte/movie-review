@@ -2,7 +2,7 @@ import React from 'react'
 import Container from '@mui/material/Container'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography';
-import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied'
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied'
 
 
 export default function Error({ height, image, text, subText, width }) {

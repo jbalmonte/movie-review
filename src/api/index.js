@@ -37,17 +37,21 @@ const api = {
             console.log('API:Error: ', err)
         }
     },
-    fetchMovies: async searchTerm => {
+    fetchMovies: async (searchTerm, page = 1) => {
         try {
-            const url = `${process.env.REACT_APP_OMDB_END_POINT}/?s=${searchTerm}&apikey=${process.env.REACT_APP_OMDB_API_KEY}&type=movie`
+            const url = `${process.env.REACT_APP_OMDB_END_POINT}/?s=${searchTerm}&apikey=${process.env.REACT_APP_OMDB_API_KEY}&type=movie&page=${page}`
             const response = await axios.get(url)
             const data = await response.data
-            const movies = data.Search.map(a => {
-                return Object.fromEntries(
-                    Object.entries(a).map(([x, y]) => [x.toLowerCase().replace("imdbid", "id"), y])
-                )
-            })
-            return { "all": movies }
+            console.log('data', data, data.Response)
+            if (data.Response === "True") {
+                const movies = data.Search.map(a => {
+                    return Object.fromEntries(
+                        Object.entries(a).map(([x, y]) => [x.toLowerCase().replace("imdbid", "id"), y])
+                    )
+                })
+                return movies
+            }
+            else return Promise.reject(new Error(data.Error))
         } catch (err) {
             console.log('API:Error', err)
         }

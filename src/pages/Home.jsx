@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import Button from '@mui/material/Button'
@@ -60,7 +61,7 @@ function Home() {
         <Container sx={{ pt: 5, pb: 3 }} maxWidth="false">
 
             {
-                state.map(({ label = "", path = "", movies }) => {
+                (loading ? initialState : state).map(({ label = "", path = "", movies }) => {
                     return (
                         <React.Fragment key={path}>
                             {

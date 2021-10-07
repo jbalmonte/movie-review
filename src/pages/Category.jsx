@@ -50,40 +50,39 @@ function Category() {
     return (
         <Container sx={{ pt: [3, 5], pb: 4 }} maxWidth="false">
 
-            <BackButton sx={{ mb: [1, 0] }} />
-            <>
-                {
-                    filteredMovies.length ?
-                        (
-                            <>
-                                <Box sx={{ display: [null, 'flex'], mb: 3 }}>
-                                    <Typography
-                                        variant="h4"
-                                        align='center'
-                                        sx={{ mx: 'auto' }}
-                                    >
-                                        {category.toUpperCase()} MOVIES
-                                    </Typography>
-                                </Box>
-
-                                <MovieList movies={filteredMovies} variant="infinite-scroll" />
-                            </>
-                        )
-                        :
+            {
+                filteredMovies.length ?
+                    (
                         <>
-                            {searchText &&
-                                <Error
-                                    height={[100, 300]}
-                                    width={[100, 400, 500]}
-                                    image="no_data.svg"
-                                    text=" No movies to display"
-                                    subText="Please try another keyword"
-                                />
-                            }
-                        </>
+                            <Box sx={{ display: ['block', 'block', 'flex'], mb: 3 }}>
+                                <BackButton sx={{ mb: [1, 2, 0] }} />
+                                <Typography
+                                    variant="h4"
+                                    align='center'
+                                    sx={{ mx: 'auto' }}
+                                >
+                                    {category.toUpperCase()} MOVIES
+                                </Typography>
+                            </Box>
 
-                }
-            </>
+                            <MovieList movies={filteredMovies} variant="infinite-scroll" />
+                        </>
+                    )
+                    :
+                    <>
+                        {searchText &&
+                            <Error
+                                height={[100, 300]}
+                                width={[100, 400, 500]}
+                                image="no_data.svg"
+                                text=" No movies to display"
+                                subText="Please try another keyword"
+                            />
+                        }
+                    </>
+
+            }
+
 
         </Container >
     )

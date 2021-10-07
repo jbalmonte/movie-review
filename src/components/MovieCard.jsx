@@ -34,7 +34,6 @@ export default function MovieCard({ movie = {}, loading }) {
                             sx={{ height: { xs: 150, md: 200 } }}
                             image={transform(image)}
                             onError={e => e.target.src = "/images/img_placeholder.png"}
-                            alt={title}
                         />
 
                 }
