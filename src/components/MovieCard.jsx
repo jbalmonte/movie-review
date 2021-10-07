@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Card from '@mui/material/Card';
+import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -12,7 +13,7 @@ import useImage from '../hooks/useImage';
 
 import api from '../api'
 
-function MovieCard({ movie = {}, loading }) {
+export default function MovieCard({ movie = {}, loading }) {
     const { id, title, imDbRating, imDbRatingCount, releaseState, year, gross, worldwideLifetimeGross } = movie
     const ratingCount = useRatingCount(imDbRatingCount)
     const transform = useImage()
@@ -27,22 +28,23 @@ function MovieCard({ movie = {}, loading }) {
             <CardActionArea onClick={() => history.push(`/${id}`)}>
                 {
                     loading ?
-                        <Skeleton variant="rectangular" animation="wave" height={200} sx={{ bgcolor: theme => theme.palette.secondary[500] }} /> :
+                        <Skeleton variant="rectangular" animation="wave" sx={{ bgcolor: theme => theme.palette.secondary[500], height: [150, 150, 200] }} /> :
                         <CardMedia
                             component="img"
-                            height="200"
-                            image={transform(image) || "/images/img_placeholder.png"}
+                            sx={{ height: { xs: 150, md: 200 } }}
+                            image={transform(image)}
+                            onError={e => e.target.src = "/images/img_placeholder.png"}
                             alt={title}
                         />
 
                 }
-                <CardContent sx={{ bgcolor: "text.primary", m: 0 }}>
+                <CardContent sx={{ bgcolor: "text.primary" }}>
                     {
                         loading ?
-                            <>
+                            <Box sx={{ py: 0.5 }}>
                                 <Skeleton height={13} variant="text" animation="wave" sx={{ mb: 1, bgcolor: theme => theme.palette.secondary[500] }} />
                                 <Skeleton height={13} variant="text" animation="wave" width="60%" sx={{ bgcolor: theme => theme.palette.secondary[500] }} />
-                            </>
+                            </Box>
                             :
                             <>
                                 <Typography noWrap gutterBottom variant="subtitle2" sx={{ color: 'background.contrastText' }}>
@@ -58,12 +60,11 @@ function MovieCard({ movie = {}, loading }) {
                                                 {imDbRating || '0'}
                                                 {ratingCount && ` (${ratingCount})`}
                                             </> :
-                                            releaseState ?
-                                                releaseState.replace(/Opening this week -/i, '') + ', ' + year
+                                            releaseState ? releaseState.replace(/Opening this week -/i, '') + ', ' + year
                                                 :
-                                                gross ?
-                                                    gross :
-                                                    worldwideLifetimeGross
+                                                gross ? gross :
+                                                    worldwideLifetimeGross ? worldwideLifetimeGross :
+                                                        year
 
                                     }
                                 </Typography>
@@ -75,5 +76,3 @@ function MovieCard({ movie = {}, loading }) {
         </ Card>
     );
 }
-
-export default MovieCard

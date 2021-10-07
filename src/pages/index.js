@@ -1,3 +1,5 @@
 export { default as Home } from './Home'
 export { default as Category } from './Category'
 export { default as SingleMovie } from './SingleMovie'
+export { default as Page404 } from './Page404'
+export { default as SearchResult } from './SearchResult'

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import TableContainer from '@mui/material/TableContainer'
@@ -37,16 +37,16 @@ export default function SingleMovie() {
 
     const { id } = useParams()
     const fetchData = useFetchData()
+    const history = useHistory()
     const [data, setData] = useState([])
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const sm = useMediaQuery(theme => theme.breakpoints.down('sm'))
 
     useEffect(() => {
-        setLoading(true)
         fetchData(id).then(data => {
             setData(data)
             setTimeout(() => setLoading(false), 1000)
-        })
+        }).catch(err => history.replace('/InvalidID'))
         return () => setLoading(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

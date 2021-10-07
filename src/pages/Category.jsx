@@ -4,28 +4,22 @@ import React, { useEffect, useState } from 'react'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
-import InfiniteScroll from 'react-infinite-scroll-component'
 import MovieList from '../components/MovieList'
 import { useParams } from 'react-router'
 import useURLCategory from '../hooks/useURLCategory'
-import useSearch from '../hooks/useSearch';
 import BackButton from '../components/BackButton'
+import Error from '../components/Error'
 
 import api from '../api'
+import useSearch from '../hooks/useSearch'
 
 function Category() {
 
     const params = useParams()
+    const { searchText } = useSearch()
+    const [filteredMovies, setFilteredMovies] = useState([])
     const { category, apiCategory } = useURLCategory(params.category)
     const [movies, setMovies] = useState([])
-    const [filteredMovies, setFilteredMovies] = useState([])
-    const [count, setCount] = useState({ prev: 0, next: 18 })
-    const [current, setCurrent] = useState([])
-    const [hasMore, setHasMore] = useState(true)
-    const { searchText, setSearchText } = useSearch()
-
-
 
     useEffect(() => {
         /*
@@ -37,64 +31,61 @@ function Category() {
         })
         */
 
+
         //From the db
         import(`../db/${params.category}`)
             .then(response => response.default)
             .then(movies => {
                 setMovies(movies)
                 setFilteredMovies(movies)
-                setCurrent(movies.slice(count.prev, count.next))
             })
 
-        return () => setSearchText('')
     }, [])
 
     useEffect(() => {
         const filteredMovies = movies.filter(m => new RegExp(searchText, 'i').test(m.title))
         setFilteredMovies(filteredMovies)
-        setCurrent(filteredMovies.slice(0, 18))
-        setCount({ prev: 18, next: 36 })
-    }, [searchText]);
-
-    useEffect(() => {
-        if (filteredMovies.length && current.length === filteredMovies.length) {
-            setHasMore(false)
-        }
-    }, [current, filteredMovies])
-
-
-    const fetchMoreMovies = () => {
-        setCount(prevState => ({ prev: prevState.next, next: prevState.next + 18 }))
-        setCurrent(current.concat(filteredMovies.slice(count.next, count.next + 18)))
-    }
+    }, [searchText])
 
     return (
         <Container sx={{ pt: [3, 5], pb: 4 }} maxWidth="false">
-            <Box sx={{ display: [null, 'flex'], mb: 3 }}>
 
-                <BackButton />
+            <BackButton sx={{ mb: [1, 0] }} />
+            <>
+                {
+                    filteredMovies.length ?
+                        (
+                            <>
+                                <Box sx={{ display: [null, 'flex'], mb: 3 }}>
+                                    <Typography
+                                        variant="h4"
+                                        align='center'
+                                        sx={{ mx: 'auto' }}
+                                    >
+                                        {category.toUpperCase()} MOVIES
+                                    </Typography>
+                                </Box>
 
-                <Typography
-                    variant="h4"
-                    align="center"
-                    sx={{ mx: 'auto' }}
-                >
-                    {category.toUpperCase()} MOVIES
-                </Typography>
-            </Box>
-            <InfiniteScroll
-                dataLength={current.length}
-                next={fetchMoreMovies}
-                hasMore={hasMore}
-                loader={
-                    <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
-                        <CircularProgress color="secondary" disableShrink />
-                    </Box>
+                                <MovieList movies={filteredMovies} variant="infinite-scroll" />
+                            </>
+                        )
+                        :
+                        <>
+                            {searchText &&
+                                <Error
+                                    height={[100, 300]}
+                                    width={[100, 400, 500]}
+                                    image="no_data.svg"
+                                    text=" No movies to display"
+                                    subText="Please try another keyword"
+                                />
+                            }
+                        </>
+
                 }
-            >
-                <MovieList movies={current} />
-            </InfiniteScroll>
-        </Container>
+            </>
+
+        </Container >
     )
 }
 

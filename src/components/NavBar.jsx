@@ -6,10 +6,11 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import MovieFilterIcon from '@mui/icons-material/MovieFilter';
+import MovieFilterOutlinedIcon from '@mui/icons-material/MovieFilterOutlined';
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
 import useSearch from '../hooks/useSearch';
+import { useHistory } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -57,6 +58,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function SearchAppBar() {
     const [value, setValue] = useState('')
     const { setSearchText } = useSearch()
+    const history = useHistory()
 
     const handleChange = e => {
         const val = e.target.value
@@ -68,12 +70,20 @@ export default function SearchAppBar() {
         <Box sx={{ flexGrow: 1 }} elevation={0}>
             <AppBar position="static" sx={{ bgcolor: 'primary.main', color: 'common.black' }}>
                 <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }} variant="dense" id="back-to-top-anchor">
-                    <Box sx={{ display: 'flex', alignItems: 'center', }}>
-                        <MovieFilterIcon sx={{ mr: 1, alignItems: 'center', }} />
+                    <Box
+                        sx={{ display: 'flex', pointer: 'cursor', alignItems: 'center' }}
+                        onClick={() => history.push('/')}>
+                        <MovieFilterOutlinedIcon sx={{ mr: 1, alignItems: 'center', }} />
                         <Typography
                             variant="h6"
                             noWrap
-                            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }, fontFamily: 'Anton, sans serif', pr: 1 }}
+                            sx={{
+                                flexGrow: 1,
+                                display: { xs: 'none', sm: 'block' },
+                                fontFamily: 'Anton, sans serif',
+                                pr: 1,
+                                pointerEvents: 'none'
+                            }}
                         >
                             Movie Review
                         </Typography>

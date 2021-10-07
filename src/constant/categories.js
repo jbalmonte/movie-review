@@ -5,6 +5,7 @@ const categories = [
     { label: 'Coming Soon', path: 'coming_soon', apiPath: 'ComingSoon' },
     { label: 'Box Office', path: 'box_office', apiPath: 'BoxOffice' },
     { label: 'Box Office of All Time', path: 'box_office_of_all_time', apiPath: 'BoxOfficeAllTime' },
+    { label: 'All', path: 'all', apiPath: 'all' },
 ]
 
 export default categories

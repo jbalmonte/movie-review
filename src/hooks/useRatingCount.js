@@ -7,7 +7,10 @@ function getRatingCount(n) {
     }
     for (let key in dict) {
         const value = dict[key]
-        if (n >= value) return `${(n / value).toFixed(1)}${key}`
+        if (n >= value) {
+            const result = n / value
+            return `${result.toFixed((result + "").length < 3)}${key}`
+        }
     }
     return n
 }
