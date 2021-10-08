@@ -9,14 +9,14 @@ import { useParams } from 'react-router'
 import useURLCategory from '../hooks/useURLCategory'
 import BackButton from '../components/BackButton'
 import Error from '../components/Error'
-
-import api from '../api'
 import useSearch from '../hooks/useSearch'
 
-function Category() {
+import api from '../api'
 
+function Category() {
     const params = useParams()
     const { searchText } = useSearch()
+    const [totalLength, setTotalLength] = useState(0)
     const [filteredMovies, setFilteredMovies] = useState([])
     const { category, apiCategory } = useURLCategory(params.category)
     const [movies, setMovies] = useState([])
@@ -27,7 +27,8 @@ function Category() {
 
         api.fetch(apiCategory).then(movies => {
             setMovies(movies)
-            setCurrent(movies.slice(count.prev, count.next))
+            setFilteredMovies(movies)
+            setTotalLength(movies.length)
         })
         */
 
@@ -38,6 +39,7 @@ function Category() {
             .then(movies => {
                 setMovies(movies)
                 setFilteredMovies(movies)
+                setTotalLength(movies.length)
             })
 
     }, [])
@@ -45,6 +47,7 @@ function Category() {
     useEffect(() => {
         const filteredMovies = movies.filter(m => new RegExp(searchText, 'i').test(m.title))
         setFilteredMovies(filteredMovies)
+        setTotalLength(filteredMovies.length)
     }, [searchText])
 
     return (
@@ -65,7 +68,11 @@ function Category() {
                                 </Typography>
                             </Box>
 
-                            <MovieList movies={filteredMovies} variant="infinite-scroll" />
+                            <MovieList
+                                movies={filteredMovies}
+                                totalLength={totalLength}
+                                variant="infinite-scroll"
+                            />
                         </>
                     )
                     :

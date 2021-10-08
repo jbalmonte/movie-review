@@ -8,22 +8,20 @@ import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
 import StarIcon from '@mui/icons-material/Star';
 import useRatingCount from '../hooks/useRatingCount';
-import { useHistory } from 'react-router';
 import useImage from '../hooks/useImage';
 
 import api from '../api'
+import { useHistory } from 'react-router';
 
 function MovieCard({ movie = {}, loading }) {
     const { id, title, imDbRating, imDbRatingCount, releaseState, year, gross, worldwideLifetimeGross } = movie
+    const history = useHistory()
     const ratingCount = useRatingCount(imDbRatingCount)
     const transform = useImage()
     const [image, setImage] = useState(movie.image)
-    const history = useHistory()
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
-        if (image === undefined)
-            api.fetchImage(id).then(img => setImage(img))
+        if (image === undefined) api.fetchImage(id).then(img => setImage(img))
         return () => setImage()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -33,7 +31,15 @@ function MovieCard({ movie = {}, loading }) {
             <CardActionArea onClick={() => history.push(`/${id}`)}>
                 {
                     loading ?
-                        <Skeleton variant="rectangular" animation="wave" sx={{ bgcolor: theme => theme.palette.secondary[500], height: [150, 150, 200] }} /> :
+                        <Skeleton
+                            variant="rectangular"
+                            animation="wave"
+                            sx={{
+                                bgcolor: theme => theme.palette.secondary[500],
+                                height: [150, 150, 200]
+                            }}
+                        />
+                        :
                         <CardMedia
                             component="img"
                             sx={{ height: { xs: 150, md: 200 } }}
@@ -42,7 +48,7 @@ function MovieCard({ movie = {}, loading }) {
                         />
 
                 }
-                <CardContent sx={{ bgcolor: "text.primary" }}>
+                <CardContent sx={{ bgcolor: "text.primary", heigh: '20%' }}>
                     {
                         loading ?
                             <Box sx={{ py: 0.5 }}>
@@ -51,7 +57,7 @@ function MovieCard({ movie = {}, loading }) {
                             </Box>
                             :
                             <>
-                                <Typography noWrap gutterBottom variant="subtitle2" sx={{ color: 'background.contrastText' }}>
+                                <Typography noWrap variant="subtitle2" sx={{ color: 'background.contrastText' }}>
                                     {title}
                                 </Typography>
 
@@ -81,4 +87,4 @@ function MovieCard({ movie = {}, loading }) {
     );
 }
 
-export default React.memo(MovieCard)
+export default MovieCard

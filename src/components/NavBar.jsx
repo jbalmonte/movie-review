@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -56,30 +56,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 export default function SearchAppBar() {
-    const [value, setValue] = useState('')
     const { searchText, setSearchText } = useSearch()
     const history = useHistory()
 
-    const handleChange = e => {
-        const val = e.target.value
-        setValue(val)
-        setSearchText(val)
-    }
-
-    useEffect(() => (searchText === "") && setValue(''), [searchText])
     return (
         <Box sx={{ flexGrow: 1 }} elevation={0}>
             <AppBar position="static" sx={{ bgcolor: 'primary.main', color: 'common.black' }}>
                 <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }} variant="dense" id="back-to-top-anchor">
                     <Box
                         sx={{ display: 'flex', pointer: 'cursor', alignItems: 'center' }}
-                        onClick={
-                            () => {
-                                setValue('')
-                                setSearchText('')
-                                history.push('/')
-                            }
-                        }>
+                        onClick={() => history.push('/')}
+                    >
                         <MovieFilterOutlinedIcon sx={{ mr: 1, alignItems: 'center', }} />
                         <Typography
                             variant="h6"
@@ -102,8 +89,8 @@ export default function SearchAppBar() {
                         </SearchIconWrapper>
                         <StyledInputBase
                             placeholder="Search…"
-                            value={value}
-                            onChange={handleChange}
+                            value={searchText}
+                            onChange={e => setSearchText(e.target.value)}
                             inputProps={{ 'aria-label': 'search' }}
                         />
                     </Search>

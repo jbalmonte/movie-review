@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import Container from '@mui/material/Container'
@@ -19,10 +20,9 @@ import SportsScoreIcon from '@mui/icons-material/SportsScore';
 import PersonIcon from '@mui/icons-material/Person';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import useMediaQuery from '@mui/material/useMediaQuery'
-import Poster from '../components/SingleMovie/Poster'
-import Title from '../components/SingleMovie/Title'
+import Poster from '../components/Poster'
+import Title from '../components/Title'
 import BackButton from '../components/BackButton';
-import useSearch from '../hooks/useSearch';
 
 const fields = [
     { Icon: props => <CategoryIcon {...props} />, field: 'Genre' },
@@ -38,7 +38,6 @@ export default function SingleMovie() {
 
     const { id } = useParams()
     const fetchData = useFetchData()
-    const { searchText } = useSearch()
     const history = useHistory()
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(true)
@@ -48,12 +47,10 @@ export default function SingleMovie() {
         fetchData(id).then(data => {
             setData(data)
             setTimeout(() => setLoading(false), 1000)
-        }).catch(err => history.replace('/InvalidID'))
+        }).catch(() => history.replace('/InvalidID'))
         return () => setLoading(false)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    useEffect(() => searchText && history.push("/search"))
 
     return (
         <Container maxWidth="lg" sx={{ bgcolor: 'inherit', pt: [4, 5], pb: [5, 3], display: [null, 'flex'], alignItems: 'center' }}>

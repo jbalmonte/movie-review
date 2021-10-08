@@ -1,40 +1,42 @@
 import React, { useState, useEffect } from 'react'
-import Box from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress';
 
 function withInfiniteScroll(WrappedComponent) {
 
     function WithInfiniteScroll(props) {
-        const { movies = [], variant, next, ...rest } = props
+        const { movies = [], variant, next, totalLength } = props
         const [page, setPage] = useState(2)
         const [count, setCount] = useState({ prev: 0, next: 18 })
         const [current, setCurrent] = useState([])
         const [hasMore, setHasMore] = useState(true)
 
-        useEffect(() => {
-            setCurrent(movies.slice(0, 18))
-            setCount({ prev: 18, next: 36 })
-        }, [movies])
-
+        useEffect(() => setCurrent(movies.slice(0, 18)), [movies])
 
         useEffect(() => {
-            if (movies.length && current.length === movies.length && !next) setHasMore(false);
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [current, movies])
+            if (totalLength && current.length === totalLength) setHasMore(false);
+        }, [current, totalLength])
 
 
         const fetchMoreMovies = () => {
-
             if (next) {
                 next(page)
-                    .then(data => setCurrent(current.concat(data)))
+                    .then(data => {
+                        setCurrent(current.concat(data.movies))
+                        setPage(prev => prev + 1)
+                    })
                     .catch(() => setHasMore(false))
             }
-            else setCurrent(movies.slice(count.next, count.next + 18))
-            setCount(prevState => ({ prev: prevState.next, next: prevState.next + 18 }))
-            setPage(prev => prev + 1)
+
+            else {
+                setCurrent(current.concat(movies.slice(count.next, count.next + 18)))
+                setCount(prevState => ({ prev: prevState.next, next: prevState.next + 18 }))
+            }
         }
+        // <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+        //     <CircularProgress color="secondary" disableShrink />
+        // </Box>
 
         return (
             <>
@@ -53,7 +55,7 @@ function withInfiniteScroll(WrappedComponent) {
                         >
 
                             <WrappedComponent
-                                {...rest}
+                                {...props}
                                 movies={current}
                             />
 

@@ -1,11 +1,26 @@
-import React from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react'
 import Button from '@mui/material/Button'
 import Skeleton from '@mui/material/Skeleton'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import { useHistory } from 'react-router-dom'
+import useSearch from '../hooks/useSearch'
 
-export default function BackButton({ sx, loading }) {
+export default function BackButton({ sx, loading, variant }) {
+    const [clicked, setClicked] = useState(false)
+    const { searchText, setSearchText } = useSearch()
     const history = useHistory()
+
+    useEffect(() => clicked && !searchText && history.goBack(), [clicked])
+
+    const handleClick = () => {
+        if (variant === "search-reset") {
+            setClicked(true)
+            setSearchText('')
+        }
+        else history.goBack()
+    }
+
     return (
         <>
             {
@@ -20,7 +35,7 @@ export default function BackButton({ sx, loading }) {
                     <Button
                         startIcon={<ArrowBackIosIcon fontSize="small" />}
                         color="secondary"
-                        onClick={() => history.goBack()}
+                        onClick={handleClick}
                         sx={sx}
                     >
                         Back

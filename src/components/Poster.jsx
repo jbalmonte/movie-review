@@ -1,6 +1,7 @@
 import React from 'react'
 import Paper from '@mui/material/Paper'
 import Skeleton from '@mui/material/Skeleton'
+import Typography from '@mui/material/Typography';
 
 export default function Poster({ poster, loading }) {
     return (
@@ -29,11 +30,22 @@ export default function Poster({ poster, loading }) {
                             background: `url(${poster}) center center`,
                             backgroundRepeat: 'no-repeat',
                             backgroundSize: 'contain',
-                            bgcolor: 'inherit',
+                            bgcolor: poster === 'N/A' ? 'secondary.dark' : 'inherit',
                             height: [200, 400, 500],
                             width: [200, 400, 500],
+                            color: 'secondary.main',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
                         }}
-                    />
+                    >
+                        {
+                            poster === "N/A" &&
+                            <Typography variant="h5" align="center">
+                                No poster to display
+                            </Typography>
+                        }
+                    </Paper>
             }
 
         </>

@@ -1,13 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
-import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router';
+import React, { useState, useEffect, useCallback } from 'react'
 import MovieList from '../components/MovieList';
 import useSearch from '../hooks/useSearch';
 import Error from '../components/Error';
 import api from '../api';
-
+import BackButton from '../components/BackButton';
+import debounce from '../utils/debounce'
 
 
 const errorTypes = {
@@ -18,30 +19,29 @@ const errorTypes = {
 
 export default function SearchResult() {
     const [movies, setMovies] = useState([])
+    const [totalLength, setTotalLength] = useState(0)
     const [error, setError] = useState()
-    const history = useHistory()
-    const { searchText, setSearchText } = useSearch()
+    const { searchText } = useSearch()
 
-
-    useEffect(() => {
-        if (searchText) {
-            api.fetchMovies(searchText)
+    const fetch = useCallback(
+        debounce(s => {
+            api.fetchMovies(s)
                 .then(data => {
-                    setMovies(data)
+                    setMovies(data.movies)
+                    setTotalLength(+data.totalLength)
                     setError(undefined)
                 })
-
                 .catch(err => {
                     const type = err.message === "Movie not found!" ? 'movieNotFound' : 'tooManyResults'
                     setError(errorTypes[type])
+                    setTotalLength(0)
                     setMovies([])
                 })
-        }
+        }, 400), [])
 
-        else history.goBack()
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchText])
+    useEffect(() => fetch(searchText), [searchText])
+
 
     const next = async (page) => {
         try {
@@ -52,39 +52,43 @@ export default function SearchResult() {
         }
     }
 
-    useEffect(() => () => setSearchText(''), [])
-
     return (
         <Container sx={{ pt: 5, pb: 5 }} maxWidth="false">
             {
                 error ?
-                    <Error
-                        image={error.image}
-                        height={[100, 300, 400]}
-                        width={[100, 400, 500]}
-                        text={error.text}
-                        subText="Please try another keyword"
-                    />
+                    <Box sx={{ display: ['block', 'block', 'flex'], alignItems: 'start' }}>
+                        <BackButton variant="search-reset" />
 
+                        <Error
+                            image={error.image}
+                            height={[100, 300, 400]}
+                            width={[100, 400, 500]}
+                            text={error.text}
+                            subText="Please try another keyword"
+                        />
+
+                    </Box>
                     :
                     <>
-                        <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
-                            <Typography variant="h6" >
-                                Showing the result(s) of:
-                            </Typography>
-
-                            <Typography
-                                variant="h6"
-                                sx={{ fontStyle: 'italic', fontWeight: 'bold', ml: 1 }}
-                                color="secondary"
-                            >
-                                {searchText}
-                            </Typography>
+                        <Box sx={{ display: ['block', 'block', 'flex'], justifyContent: 'space-between' }}>
+                            <BackButton sx={{ mb: 2 }} variant="search-reset" />
+                            <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
+                                <Typography variant="h6">
+                                    Showing the result(s) of:
+                                </Typography>
+                                <Typography
+                                    variant="h6"
+                                    sx={{ fontStyle: 'italic', fontWeight: 'bold', ml: 1 }}
+                                    color="secondary"
+                                >
+                                    {searchText}
+                                </Typography>
+                            </Box>
 
                         </Box>
-
                         <MovieList
                             movies={movies}
+                            totalLength={totalLength}
                             variant="infinite-scroll"
                             next={next}
                         />

@@ -48,7 +48,7 @@ const api = {
                         Object.entries(a).map(([x, y]) => [x.toLowerCase().replace("imdbid", "id"), y])
                     )
                 })
-                return movies
+                return { movies, totalLength: data.totalResults }
             }
             else return Promise.reject(new Error(data.Error))
         } catch (err) {

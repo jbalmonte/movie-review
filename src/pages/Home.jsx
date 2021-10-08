@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
@@ -42,19 +43,11 @@ function Home() {
         const data = categoryList.map(c => ({ ...c, movies: categoryDB[c.path]?.slice(0, 12) }))
         setState(data)
         setTimeout(() => setLoading(false), 1000)
-
         return () => setLoading(false)
 
     }, [])
 
-    useEffect(() => {
-
-        if (searchText) {
-            history.push('/search')
-        }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchText])
+    useEffect(() => searchText && history.push('/search'), [searchText])
 
 
     return (
@@ -74,6 +67,7 @@ function Home() {
                                     <MovieList
                                         movies={movies}
                                         loading={loading}
+                                        totalLength={movies.length}
                                         variant="normal"
                                     />
 
