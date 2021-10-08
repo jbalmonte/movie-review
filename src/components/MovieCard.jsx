@@ -13,7 +13,7 @@ import useImage from '../hooks/useImage';
 
 import api from '../api'
 
-export default function MovieCard({ movie = {}, loading }) {
+function MovieCard({ movie = {}, loading }) {
     const { id, title, imDbRating, imDbRatingCount, releaseState, year, gross, worldwideLifetimeGross } = movie
     const ratingCount = useRatingCount(imDbRatingCount)
     const transform = useImage()
@@ -21,7 +21,12 @@ export default function MovieCard({ movie = {}, loading }) {
     const history = useHistory()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => (image === undefined) && api.fetchImage(id).then(img => setImage(img)), [])
+    useEffect(() => {
+        if (image === undefined)
+            api.fetchImage(id).then(img => setImage(img))
+        return () => setImage()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <Card sx={{ bgcolor: 'secondary.main' }}>
@@ -75,3 +80,5 @@ export default function MovieCard({ movie = {}, loading }) {
         </ Card>
     );
 }
+
+export default React.memo(MovieCard)

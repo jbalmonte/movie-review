@@ -42,7 +42,6 @@ const api = {
             const url = `${process.env.REACT_APP_OMDB_END_POINT}/?s=${searchTerm}&apikey=${process.env.REACT_APP_OMDB_API_KEY}&type=movie&page=${page}`
             const response = await axios.get(url)
             const data = await response.data
-            console.log('data', data, data.Response)
             if (data.Response === "True") {
                 const movies = data.Search.map(a => {
                     return Object.fromEntries(

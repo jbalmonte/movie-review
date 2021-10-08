@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -57,7 +57,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function SearchAppBar() {
     const [value, setValue] = useState('')
-    const { setSearchText } = useSearch()
+    const { searchText, setSearchText } = useSearch()
     const history = useHistory()
 
     const handleChange = e => {
@@ -66,13 +66,20 @@ export default function SearchAppBar() {
         setSearchText(val)
     }
 
+    useEffect(() => (searchText === "") && setValue(''), [searchText])
     return (
         <Box sx={{ flexGrow: 1 }} elevation={0}>
             <AppBar position="static" sx={{ bgcolor: 'primary.main', color: 'common.black' }}>
                 <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }} variant="dense" id="back-to-top-anchor">
                     <Box
                         sx={{ display: 'flex', pointer: 'cursor', alignItems: 'center' }}
-                        onClick={() => history.push('/')}>
+                        onClick={
+                            () => {
+                                setValue('')
+                                setSearchText('')
+                                history.push('/')
+                            }
+                        }>
                         <MovieFilterOutlinedIcon sx={{ mr: 1, alignItems: 'center', }} />
                         <Typography
                             variant="h6"

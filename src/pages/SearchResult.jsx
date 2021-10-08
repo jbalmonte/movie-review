@@ -20,7 +20,7 @@ export default function SearchResult() {
     const [movies, setMovies] = useState([])
     const [error, setError] = useState()
     const history = useHistory()
-    const { searchText } = useSearch()
+    const { searchText, setSearchText } = useSearch()
 
 
     useEffect(() => {
@@ -43,10 +43,19 @@ export default function SearchResult() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchText])
 
+    const next = async (page) => {
+        try {
+            const data = await api.fetchMovies(searchText, page)
+            return await data
+        } catch (err) {
+            throw new Error(err.message)
+        }
+    }
+
+    useEffect(() => () => setSearchText(''), [])
 
     return (
-        <Container sx={{ pt: 5, pb: 3 }} maxWidth="false">
-
+        <Container sx={{ pt: 5, pb: 5 }} maxWidth="false">
             {
                 error ?
                     <Error
@@ -60,12 +69,12 @@ export default function SearchResult() {
                     :
                     <>
                         <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
-                            <Typography variant="h5" >
-                                Showing the result of:
+                            <Typography variant="h6" >
+                                Showing the result(s) of:
                             </Typography>
 
                             <Typography
-                                variant="h5"
+                                variant="h6"
                                 sx={{ fontStyle: 'italic', fontWeight: 'bold', ml: 1 }}
                                 color="secondary"
                             >
@@ -77,6 +86,7 @@ export default function SearchResult() {
                         <MovieList
                             movies={movies}
                             variant="infinite-scroll"
+                            next={next}
                         />
                     </>
 

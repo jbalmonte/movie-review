@@ -22,6 +22,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import Poster from '../components/SingleMovie/Poster'
 import Title from '../components/SingleMovie/Title'
 import BackButton from '../components/BackButton';
+import useSearch from '../hooks/useSearch';
 
 const fields = [
     { Icon: props => <CategoryIcon {...props} />, field: 'Genre' },
@@ -37,6 +38,7 @@ export default function SingleMovie() {
 
     const { id } = useParams()
     const fetchData = useFetchData()
+    const { searchText } = useSearch()
     const history = useHistory()
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(true)
@@ -51,7 +53,7 @@ export default function SingleMovie() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-
+    useEffect(() => searchText && history.push("/search"))
 
     return (
         <Container maxWidth="lg" sx={{ bgcolor: 'inherit', pt: [4, 5], pb: [5, 3], display: [null, 'flex'], alignItems: 'center' }}>

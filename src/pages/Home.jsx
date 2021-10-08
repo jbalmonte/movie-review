@@ -74,7 +74,6 @@ function Home() {
                                     <MovieList
                                         movies={movies}
                                         loading={loading}
-                                        label={label}
                                         variant="normal"
                                     />
 
