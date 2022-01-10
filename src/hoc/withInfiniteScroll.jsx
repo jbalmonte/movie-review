@@ -34,9 +34,6 @@ function withInfiniteScroll(WrappedComponent) {
                 setCount(prevState => ({ prev: prevState.next, next: prevState.next + 18 }))
             }
         }
-        // <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
-        //     <CircularProgress color="secondary" disableShrink />
-        // </Box>
 
         return (
             <>
